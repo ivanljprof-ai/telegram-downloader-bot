@@ -1,0 +1,17 @@
+services:
+  telegram-bot:
+    build: .
+    container_name: telegram_downloader_bot
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - DOWNLOAD_DIR=/downloads
+    volumes:
+      - ${DOWNLOAD_PATH:-./downloads}:/downloads
+
+
+

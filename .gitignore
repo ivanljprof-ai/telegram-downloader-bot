@@ -1,0 +1,22 @@
+# Variables de entorno secretas
+.env
+
+# Archivos de sesión y cookies de Instagram
+cookies.txt
+*.cookie
+*.session
+
+# Directorio de descargas
+downloads/
+descargas/
+
+# Archivos de compilación de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sistema operativo y editores
+.DS_Store
+.vscode/
+.idea/
