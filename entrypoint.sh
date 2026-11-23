@@ -8,13 +8,13 @@ while true; do
         echo "⚠️ BOT NO CONFIGURADO"
         echo "🌐 Iniciando servidor web de configuración en http://localhost:8080"
         echo "=========================================================="
-        python /app/setup_web.py || true
+        /app/telegram-downloader-bot setup || true
     fi
 
     echo "=========================================================="
-    echo "🚀 Arrancando Bot Multidescargas de Telegram..."
+    echo "🚀 Arrancando Bot Multidescargas de Telegram (Motor Rust)..."
     echo "=========================================================="
-    python /app/main.py || true
+    /app/telegram-downloader-bot || true
 
     echo "🔄 Reiniciando ciclo del contenedor..."
     sleep 1

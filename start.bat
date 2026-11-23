@@ -13,9 +13,14 @@ if %errorlevel% neq 0 (
 )
 
 echo 🐳 Construyendo e iniciando contenedor Docker...
-docker-compose up -d --build
+docker compose version >nul 2>&1
+if %errorlevel% equ 0 (
+    docker compose up -d --build
+) else (
+    docker-compose up -d --build
+)
 
-for /f "delims=" %%i in ('python -c "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.connect(('8.8.8.8', 80)); print(s.getsockname()[0]); s.close()" 2^>nul') do set SERVER_IP=%%i
+for /f "usebackq delims=" %%i in (`powershell -NoProfile -Command "(Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.InterfaceAlias -notmatch 'Loopback|vEthernet|Docker|WSL' -and $_.IPAddress -notlike '169.254.*' } | Select-Object -First 1 -ExpandProperty IPAddress)" 2^>nul`) do set SERVER_IP=%%i
 
 if "%SERVER_IP%"=="" (
     for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr /c:"IPv4"') do (

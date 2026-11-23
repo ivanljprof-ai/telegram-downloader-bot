@@ -10,11 +10,9 @@ cookies.txt
 downloads/
 descargas/
 
-# Archivos de compilación de Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Artefactos de compilación de Rust
+/target/
+**/*.rs.bk
 
 # Sistema operativo y editores
 .DS_Store

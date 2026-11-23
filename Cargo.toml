@@ -1,0 +1,30 @@
+[package]
+name = "telegram-downloader-bot"
+version = "2.0.0"
+edition = "2024"
+description = "Ultra-low-memory Rust Telegram multi-downloader & server utility bot"
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+axum = "0.8"
+regex = "1"
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls", "cookies"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sysinfo = { version = "0.40", default-features = false, features = ["system", "disk"] }
+tokio = { version = "1", features = ["full"] }
+tokio-stream = { version = "0.1", default-features = false }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+urlencoding = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true

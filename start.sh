@@ -11,10 +11,25 @@ if ! command -v docker &> /dev/null; then
 fi
 
 echo "🐳 Construyendo e iniciando contenedores Docker..."
-docker-compose up -d --build
+if docker compose version &> /dev/null; then
+    docker compose up -d --build
+else
+    docker-compose up -d --build
+fi
 
-# Obtener IP real del equipo/servidor mediante Python o fallback
-SERVER_IP=$(python3 -c "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); s.connect(('8.8.8.8', 80)); print(s.getsockname()[0]); s.close()" 2>/dev/null)
+# Detectar IP LAN del equipo/servidor sin depender de Python en el host
+SERVER_IP=""
+if command -v ipconfig &> /dev/null; then
+    IFACE=$(route -n get 8.8.8.8 2>/dev/null | awk '/interface:/{print $2}')
+    if [ -n "$IFACE" ]; then
+        SERVER_IP=$(ipconfig getifaddr "$IFACE" 2>/dev/null || true)
+    fi
+    [ -z "$SERVER_IP" ] && SERVER_IP=$(ipconfig getifaddr en0 2>/dev/null || true)
+elif command -v ip &> /dev/null; then
+    SERVER_IP=$(ip route get 8.8.8.8 2>/dev/null | awk '{for(i=1;i<=NF;i++) if($i=="src") print $(i+1)}' | head -n1 || true)
+elif command -v hostname &> /dev/null; then
+    SERVER_IP=$(hostname -I 2>/dev/null | awk '{print $1}' || true)
+fi
 
 if [ -z "$SERVER_IP" ]; then
     SERVER_IP="127.0.0.1"
